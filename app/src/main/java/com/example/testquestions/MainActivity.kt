@@ -127,7 +127,20 @@ fun GeoQuizScreen() {
     }
 
 
-
+    if (showResultDialog) {
+        AlertDialog(
+            onDismissRequest = { },
+            title = { Text("Тест завершен!") },
+            text = { Text("Правильных ответов: $score из ${questionBank.size}") },
+            confirmButton = {
+                Button(onClick = {
+                    showResultDialog = false
+                }) {
+                    Text("OK")
+                }
+            }
+        )
+    }
 }
 
 @Preview(showBackground = true, showSystemUi = true)
