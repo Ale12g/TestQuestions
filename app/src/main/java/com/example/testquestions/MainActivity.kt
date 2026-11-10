@@ -44,6 +44,89 @@ fun GeoQuizScreen() {
         Question("Lake Baikal is the world's oldest and deepest freshwater lake.", true)
     )
 
+    var currentIndex by remember { mutableStateOf(0) }
+    var score by remember { mutableStateOf(0) }
+    var isAnswered by remember { mutableStateOf(false) }
+    var showResultDialog by remember { mutableStateOf(false) }
+
+    val currentQuestion = questionBank[currentIndex]
+    val isLastQuestion = currentIndex == questionBank.lastIndex
+
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(24.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+
+        Text(
+            text = currentQuestion.text,
+            fontSize = 22.sp,
+            fontWeight = FontWeight.Bold,
+            textAlign = TextAlign.Center,
+            modifier = Modifier.padding(bottom = 32.dp)
+        )
+
+
+        Row(
+            horizontalArrangement = Arrangement.spacedBy(16.dp),
+            modifier = Modifier.padding(bottom = 32.dp)
+        ) {
+            Button(
+                onClick = {
+                    if (!isAnswered) {
+                        if (currentQuestion.answer) score++
+                        isAnswered = true
+                    }
+                },
+                enabled = !isAnswered,
+                modifier = Modifier.alpha(if (isAnswered) 0f else 1f)
+            ) {
+                Text("TRUE")
+            }
+
+            Button(
+                onClick = {
+                    if (!isAnswered) {
+                        if (!currentQuestion.answer) score++
+                        isAnswered = true
+                    }
+                },
+                enabled = !isAnswered,
+                modifier = Modifier.alpha(if (isAnswered) 0f else 1f)
+            ) {
+                Text("FALSE")
+            }
+        }
+
+
+        if (!isLastQuestion) {
+            Button(
+                onClick = {
+                    if (isAnswered) {
+                        currentIndex++
+                        isAnswered = false
+                    }
+                },
+                enabled = isAnswered,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .alpha(if (isLastQuestion && isAnswered) 0f else 1f)
+            ) {
+                Text("NEXT")
+            }
+        } else {
+
+            LaunchedEffect(isAnswered) {
+                if (isAnswered) {
+                    showResultDialog = true
+                }
+            }
+        }
+    }
+
+
 
 }
 
